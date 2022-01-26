@@ -10,6 +10,8 @@ const kindInput = document.querySelector('.kind__input'); // поле с наз�
 const colorInput = document.querySelector('.color__input'); // поле с названием цвета
 const weightInput = document.querySelector('.weight__input'); // поле с весом
 const addActionButton = document.querySelector('.add__action__btn'); // кнопка добавления
+const minWeightInptut = document.querySelector('.minweight__input')// поле для минимально веса
+const maxWeightInput = document.querySelector('.maxweight__input)')//поля для максимально веса
 
 
 // список фруктов в JSON формате
@@ -53,7 +55,7 @@ function fruitCard(fruit) {
    arr.push(`${key}:${value}`);
   }); 
   for ( var i = 0; i < arr.length; i++) {
-  var newContent = document.createElement('div');
+  const newContent = document.createElement('div');
   var textContent = document.createTextNode(arr[i]);
   newContent.appendChild(textContent);
   newDiv.appendChild(newContent);
@@ -64,7 +66,7 @@ const display = () => {
     for ( var i = 0; i < fruits.length; i++) {
       fruitCard(fruits[i]);
     };
-};
+  };
   // TODO: очищаем fruitsList от вложенных элементов,
   // чтобы заполнить актуальными данными из fruits
   //for (let i = 0; i < fruits.length; i++) {
@@ -84,28 +86,32 @@ display();
 /*** ПЕРЕМЕШИВАНИЕ ***/
 
 // генерация случайного числа в заданном диапазоне
-const getRandomInt = (min, max) => {
+const getRandomInt = (min,max) => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
+console.log(getRandomInt);
 // перемешивание массива
 const shuffleFruits = () => {
   let result = [];
 
   // ATTENTION: сейчас при клике вы запустите бесконечный цикл и браузер зависнет
   while (fruits.length > 0) {
+    var randomInt = getRandomInt(0,Object.keys(fruits).length);
+    var item = fruits.splice(randomInt,1);
+    result.push(item);
+  };
+
     // TODO: допишите функцию перемешивания массива
-    //
     // Подсказка: находим случайный элемент из fruits, используя getRandomInt
     // вырезаем его из fruits и вставляем в result.
     // ex.: [1, 2, 3], [] => [1, 3], [2] => [3], [2, 1] => [], [2, 1, 3]
-    // (массив fruits будет уменьшатся, а result заполняться)
-  }
-
+    // (массив fruits будет уменьшатся, а result заполняться
   fruits = result;
 };
 
 shuffleButton.addEventListener('click', () => {
+  document.querySelectorAll('.fruit__item').forEach(e => e.remove());
   shuffleFruits();
   display();
 });
@@ -115,6 +121,7 @@ shuffleButton.addEventListener('click', () => {
 // фильтрация массива
 const filterFruits = () => {
   fruits.filter((item) => {
+
     // TODO: допишите функцию
   });
 };
@@ -200,3 +207,4 @@ addActionButton.addEventListener('click', () => {
       alert("Заполните все поля!");
     };
 });
+
