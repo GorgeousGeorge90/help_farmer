@@ -10,8 +10,8 @@ const kindInput = document.querySelector('.kind__input'); // поле с наз�
 const colorInput = document.querySelector('.color__input'); // поле с названием цвета
 const weightInput = document.querySelector('.weight__input'); // поле с весом
 const addActionButton = document.querySelector('.add__action__btn'); // кнопка добавления
-//const minWeightInptut = document.querySelector('.minweight__input')// поле для минимально веса
-//const maxWeightInput = document.querySelector('.maxweight__input)')//поля для максимально веса
+const minWeightInput = document.querySelector('.minweight__input');// поле для минимально веса
+const maxWeightInput = document.querySelector('.maxweight__input');//поля для максимально веса
 
 
 // список фруктов в JSON формате
@@ -126,11 +126,14 @@ shuffleButton.addEventListener('click', () => {
 
 // фильтрация массива
 const filterFruits = () => {
-  fruits.filter((item) => {
-
-    // TODO: допишите функцию
+  let cutterFruits= fruits.filter(function(fruit) {
+     fruit.weight > 10 && fruit.weight < 25;
   });
+  fruits =cutterFruits;
 };
+
+filterFruits();
+
 
 filterButton.addEventListener('click', () => {
   filterFruits();
@@ -169,9 +172,9 @@ const sortAPI = {
   },
 
   // выполняет сортировку и производит замер времени
-  startSort(sort, arr, comparation) {
+  startSort(sort, fruits, comparationColor) {
     const start = new Date().getTime();
-    sort(arr, comparation);
+    sort(fruits, comparationColor);
     const end = new Date().getTime();
     sortTime = `${end - start} ms`;
   },
