@@ -39,14 +39,25 @@ function removeAllChildren (parent) {
   };
 };
 
-// Даннаю функцию требуется разбить на подфункции!
-function fruitCard(fruit) {
+function createNewLi() {
   var newLi = document.createElement('li');
   newLi.className = 'fruit__item fruit_default';
   var newDiv = document.createElement('div');
   newDiv.className = 'fruit__info';
   newLi.appendChild(newDiv);
   document.querySelector('.fruits__list').appendChild(newLi);
+};
+
+function theFirstChild(div) {
+  var newChild = document.createElement('div');
+  var firstContent = document.createTextNode(`index: ${arr.length}`);
+  newChild.appendChild(firstContent);
+  div.insertBefore(newChild, div.firstChild);
+};
+
+// Даннаю функцию требуется разбить на подфункции!
+function fruitCard(fruit) {
+  createNewLi();
   const arr =[];
   Object.entries(fruit).forEach(([key, value]) => {
    arr.push(`${key}:${value}`);
@@ -57,10 +68,7 @@ function fruitCard(fruit) {
     newContent.appendChild(textContent);
     newDiv.appendChild(newContent);
   };
-  var newChild = document.createElement('div');
-  var firstContent = document.createTextNode(`index: ${arr.length}`);
-  newChild.appendChild(firstContent);
-  newDiv.insertBefore(newChild, newDiv.firstChild);
+  theFirstChild(newDiv);
 };
 
 const display = () => {
@@ -160,20 +168,19 @@ const sortAPI = {
 };
 
 // инициализация полей
-sortKindLabel.textContent = sortKind;
-sortTimeLabel.textContent = sortTime;
+sortKindLabel.innerHTML = sortKind;
+sortTimeLabel.innerHTML = sortTime;
 
 sortChangeButton.addEventListener('click', () => {
   // TODO: переключать значение sortKind между 'bubbleSort' / 'quickSort'
 });
 
 sortActionButton.addEventListener('click', () => {
-  // TODO: вывести в sortTimeLabel значение 'sorting...'
   removeAllChildren (fruitsList);
   const sort = sortAPI[sortKind];
   sortAPI.startSort(sort, fruits, comparationColor);
   display();
-  // TODO: вывести в sortTimeLabel значение sortTime
+  document.querySelector('.sort__time').innerHTML = `${sortTime}`;
 });
 
 /*** ДОБАВИТЬ ФРУКТ ***/
