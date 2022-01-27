@@ -58,7 +58,7 @@ function fruitCard(fruit) {
     newDiv.appendChild(newContent);
   };
   var newChild = document.createElement('div');
-  var firstContent = document.createTextNode(`index: ${arr.length}`);
+  var firstContent = document.createTextNode(`index: ${fruitsList.children.length-1}`);
   newChild.appendChild(firstContent);
   newDiv.insertBefore(newChild, newDiv.firstChild);
 };
