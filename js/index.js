@@ -10,8 +10,9 @@ const kindInput = document.querySelector('.kind__input'); // поле с наз�
 const colorInput = document.querySelector('.color__input'); // поле с названием цвета
 const weightInput = document.querySelector('.weight__input'); // поле с весом
 const addActionButton = document.querySelector('.add__action__btn'); // кнопка добавления
-const minWeightInput = document.querySelector('.minweight__input');// поле для минимально веса
+const minWeightInptut = document.querySelector('.minweight__input');// поле для минимально веса
 const maxWeightInput = document.querySelector('.maxweight__input');//поля для максимально веса
+let condition = 0;
 
 
 // список фруктов в JSON формате
@@ -32,17 +33,13 @@ let fruits = JSON.parse(fruitsJSON);
 
 // отрисовка карточек
 
+function removeAllChildren (parent) {
+  while (parent.firstChild) {
+    parent.removeChild(parent.firstChild);
+  };
+};
 
-
-//function startList() {
-  //const startFruit = document.createElement('div');
-  //startFruit.className = 'fruit__info';
-//}
-
-//function fruitProperty() {
-  //const property = document.createTextNode();
-//}
-
+// Даннаю функцию требуется разбить на подфункции!
 function fruitCard(fruit) {
   var newLi = document.createElement('li');
   newLi.className = 'fruit__item fruit_default';
@@ -55,69 +52,53 @@ function fruitCard(fruit) {
    arr.push(`${key}:${value}`);
   }); 
   for ( var i = 0; i < arr.length; i++) {
-  const newContent = document.createElement('div');
-  var textContent = document.createTextNode(arr[i]);
-  newContent.appendChild(textContent);
-  newDiv.appendChild(newContent);
+    const newContent = document.createElement('div');
+    var textContent = document.createTextNode(arr[i]);
+    newContent.appendChild(textContent);
+    newDiv.appendChild(newContent);
   };
-  };
-
-function removeAllChildren (parent) {
-    while (parent.firstChild) {
-      parent.removeChild(parent.firstChild);
-    };
-  };
-
+  var newChild = document.createElement('div');
+  var firstContent = document.createTextNode(`index: ${arr.length}`);
+  newChild.appendChild(firstContent);
+  newDiv.insertBefore(newChild, newDiv.firstChild);
+};
 
 const display = () => {
     for ( var i = 0; i < fruits.length; i++) {
       fruitCard(fruits[i]);
     };
-  };
-  // TODO: очищаем fruitsList от вложенных элементов,
-  // чтобы заполнить актуальными данными из fruits
-  //for (let i = 0; i < fruits.length; i++) {
-     // let fruitStart = documnt.createElement('li');
-      //fruitStart.className = "fruit__item";
-      //fruitsList.appendChild(fruitStart);
+};
 
-      
-
-
-    // TODO: формируем новый элемент <li> при помощи document.createElement,
-    // и добавляем в конец списка fruitsList при помощи document.appendChild
-
-// первая отрисовка карточек
 display();
 
 /*** ПЕРЕМЕШИВАНИЕ ***/
 
-// генерация случайного числа в заданном диапазоне
-const getRandomInt = (min,max) => {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
+/* генерация случайного числа в заданном диапазоне
+const getRandomInt = (array) => {
+  return Math.floor(Math.random()*array.length);
 };
 
-// перемешивание массива
-const shuffleFruits = () => {
-  let result = [];
+ перемешивание массива
 
-  // ATTENTION: сейчас при клике вы запустите бесконечный цикл и браузер зависнет
+В данной реализации возникла проблема с типом элемента массива,
+они не корректно считываются функцией при отрисовке)
+
+/*const shuffleFruits = () => {
+  var result = [];
   while (fruits.length > 0) {
-    var randomInt = getRandomInt(0,5);
+    var randomInt = getRandomInt(fruits);
     var item = fruits.splice(randomInt,1);
     result.push(item);
   };
-
-    // TODO: допишите функцию перемешивания массива
-    // Подсказка: находим случайный элемент из fruits, используя getRandomInt
-    // вырезаем его из fruits и вставляем в result.
-    // ex.: [1, 2, 3], [] => [1, 3], [2] => [3], [2, 1] => [], [2, 1, 3]
-    // (массив fruits будет уменьшатся, а result заполняться
   fruits = result;
+};*/
+
+function shuffleFruits() {
+  fruits.sort(() => Math.random()-0.5);
 };
 
 shuffleButton.addEventListener('click', () => {
-  removeAllChildren (fruitsList);
+  removeAllChildren(fruitsList);
   shuffleFruits();
   display();
 });
@@ -126,16 +107,14 @@ shuffleButton.addEventListener('click', () => {
 
 // фильтрация массива
 const filterFruits = () => {
-  let cutterFruits= fruits.filter(function(fruit) {
-     fruit.weight > 10 && fruit.weight < 25;
+  let cuttedArr = fruits.filter(function(fruit) {
+    return fruit.weight < maxWeightInput.value && fruit.weight > minWeightInptut.value;
   });
-  fruits =cutterFruits;
+  fruits = cuttedArr;
 };
 
-filterFruits();
-
-
 filterButton.addEventListener('click', () => {
+  removeAllChildren(fruitsList);
   filterFruits();
   display();
 });
@@ -172,9 +151,9 @@ const sortAPI = {
   },
 
   // выполняет сортировку и производит замер времени
-  startSort(sort, fruits, comparationColor) {
+  startSort(sort, arr, comparation) {
     const start = new Date().getTime();
-    sort(fruits, comparationColor);
+    sort(arr, comparation);
     const end = new Date().getTime();
     sortTime = `${end - start} ms`;
   },
@@ -199,35 +178,19 @@ sortActionButton.addEventListener('click', () => {
 
 /*** ДОБАВИТЬ ФРУКТ ***/
 
-
-function newParametrs(text) {
-  let newPar1 = document.createElement('div');
-  const text1 = document.createTextNode(text);
-  newPar1.appendChild(text1);
-  return newPar1;
-};
-
-addActionButton.addEventListener('click', () => {
-  let newFruit = document.createElement('li');
-  newFruit.className = "fruit__item fruit_default";
-  let infoDiv = document.createElement('div');
-  infoDiv.className = "fruit__info";
-  infoDiv.appendChild(newParametrs(`index: 5`)); 
-  infoDiv.appendChild(newParametrs(`kind: ${kindInput.value}`));
-  infoDiv.appendChild(newParametrs(`color: ${colorInput.value}`)); 
-  infoDiv.appendChild(newParametrs(`weight (кг): ${weightInput.value}`)); 
-  newFruit.appendChild(infoDiv);
-  let checkIt = [kindInput.value, colorInput.value, weightInput.value];
-  let count = checkIt.length;
-    for (let i = 0; i < count; i++) {
-      if (checkIt[i] === "") {
-        count--;
-      };
-    };
-    if (count === checkIt.length) {
-      document.querySelector('.fruits__list').appendChild(newFruit);
+function additionalCard(array) {
+  let newCard = {};
+  newCard['kind'] = `${kindInput.value}`;
+  newCard['color'] = `${colorInput.value}`;
+  newCard['weight'] = `${weightInput.value}`;
+  if (kindInput.value === '' || colorInput.value === '' || weightInput.value === '') {
+    return false;
     } else {
-      alert("Заполните все поля!");
-    };
+    array.push(newCard);
+  };
+};
+ 
+addActionButton.addEventListener('click', () => {
+  additionalCard(fruits) === false ? alert("Заполните все поля!"): 
+    fruitCard(fruits[fruits.length-1]);
 });
-
