@@ -39,25 +39,14 @@ function removeAllChildren (parent) {
   };
 };
 
-function createNewLi() {
+// Даннаю функцию требуется разбить на подфункции!
+function fruitCard(fruit) {
   var newLi = document.createElement('li');
   newLi.className = 'fruit__item fruit_default';
   var newDiv = document.createElement('div');
   newDiv.className = 'fruit__info';
   newLi.appendChild(newDiv);
   document.querySelector('.fruits__list').appendChild(newLi);
-};
-
-function theFirstChild(div) {
-  var newChild = document.createElement('div');
-  var firstContent = document.createTextNode(`index: ${arr.length}`);
-  newChild.appendChild(firstContent);
-  div.insertBefore(newChild, div.firstChild);
-};
-
-// Даннаю функцию требуется разбить на подфункции!
-function fruitCard(fruit) {
-  createNewLi();
   const arr =[];
   Object.entries(fruit).forEach(([key, value]) => {
    arr.push(`${key}:${value}`);
@@ -68,7 +57,10 @@ function fruitCard(fruit) {
     newContent.appendChild(textContent);
     newDiv.appendChild(newContent);
   };
-  theFirstChild(newDiv);
+  var newChild = document.createElement('div');
+  var firstContent = document.createTextNode(`index: ${arr.length}`);
+  newChild.appendChild(firstContent);
+  newDiv.insertBefore(newChild, newDiv.firstChild);
 };
 
 const display = () => {
